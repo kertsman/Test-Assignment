@@ -1,0 +1,14 @@
+{
+  "targets": {
+    "test-project-8ac54": {
+      "hosting": {
+        "test-project-with-scss": [
+          "test-project-8ac54"
+        ]
+      }
+    }
+  },
+  "projects": {
+    "default": "test-project-8ac54"
+  }
+}

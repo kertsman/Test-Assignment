@@ -1,0 +1,253 @@
+<p-toast></p-toast>
+
+<div class="card">
+  <p-toolbar styleClass="p-mb-4">
+    <ng-template pTemplate="left">
+      <button pButton pRipple label="New" icon="pi pi-plus" class="p-button-success p-mr-2" (click)="openNew()"></button>
+      <button pButton pRipple label="Delete" icon="pi pi-trash" class="p-button-danger" (click)="deleteSelectedEvents()" [disabled]="!selectedEvents || !selectedEvents.length"></button>
+    </ng-template>
+  </p-toolbar>
+
+  <p-table #dt [value]="events" [rows]="10" [paginator]="true" responsiveLayout="scroll"
+           [(selection)]="selectedEvents" [rowHover]="true" [rowsPerPageOptions]="[10,25,50]" dataKey="eventId"
+           [totalRecords]="events.length"
+           currentPageReportTemplate="Showing {first} to {last} of {totalRecords} entries" [showCurrentPageReport]="true">
+    <ng-template pTemplate="header">
+      <tr>
+        <th style="width: 3rem">
+          <p-tableHeaderCheckbox></p-tableHeaderCheckbox>
+        </th>
+        <th>healthIndex </th>
+        <th>endDate</th>
+        <th>minValueDateTime</th>
+        <th>type</th>
+        <th>cowId</th>
+        <th>animalId</th>
+        <th>eventId</th>
+        <th>deletable</th>
+        <th>lactationNumber</th>
+        <th>daysInLactation</th>
+        <th>ageInDays</th>
+        <th>startDateTime</th>
+        <th>reportingDateTime</th>
+        <th>alertType</th>
+        <th>duration</th>
+        <th>originalStartDateTime</th>
+        <th>endDateTime</th>
+        <th>daysInPregnancy</th>
+        <th>heatIndexPeak</th>
+        <th>newGroupId</th>
+        <th>newGroupName</th>
+        <th>currentGroupId</th>
+        <th>currentGroupName</th>
+        <th>destinationGroup</th>
+        <th>destinationGroupName</th>
+        <th>calvingEase</th>
+        <th>oldLactationNumber</th>
+        <th>newborns</th>
+        <th>cowEntryStatus</th>
+        <th>birthDateCalculated</th>
+        <th>sire</th>
+        <th>breedingNumber</th>
+        <th>isOutOfBreedingWindow</th>
+        <th>interval</th>
+        <th></th>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="body" let-event >
+      <tr>
+        <td>
+          <p-tableCheckbox [value]="event"></p-tableCheckbox>
+        </td>
+        <td>{{lodash.get(event,'healthIndex')}}</td>
+        <td>{{lodash.get(event, 'endDate') }}</td>
+        <td>{{lodash.get(event,'minValueDateTime')}}</td>
+        <td>{{lodash.get(event,'type')}}</td>
+        <td>{{lodash.get(event,'cowId')}}</td>
+        <td>{{lodash.get(event,'animalId')}}</td>
+        <td>{{lodash.get(event,'eventId')}}</td>
+        <td>{{lodash.get(event,'deletable')}}</td>
+        <td>{{lodash.get(event,'lactationNumber')}}</td>
+        <td>{{lodash.get(event,'daysInLactation')}}</td>
+        <td>{{lodash.get(event,'ageInDays')}}</td>
+        <td>{{lodash.get(event,'startDateTime')}}</td>
+        <td>{{lodash.get(event,'reportingDateTime')}}</td>
+        <td>{{lodash.get(event,'alertType')}}</td>
+        <td>{{lodash.get(event,'duration')}}</td>
+        <td>{{lodash.get(event,'originalStartDateTime')}}</td>
+        <td>{{lodash.get(event,'endDateTime')}}</td>
+        <td>{{lodash.get(event,'daysInPregnancy')}}</td>
+        <td>{{lodash.get(event,'heatIndexPeak')}}</td>
+        <td>{{lodash.get(event,'newGroupId')}}</td>
+        <td>{{lodash.get(event,'newGroupName')}}</td>
+        <td>{{lodash.get(event,'currentGroupId')}}</td>
+        <td>{{lodash.get(event,'currentGroupName')}}</td>
+        <td>{{lodash.get(event,'destinationGroup')}}</td>
+        <td>{{lodash.get(event,'destinationGroupName')}}</td>
+        <td>{{lodash.get(event,'calvingEase')}}</td>
+        <td>{{lodash.get(event,'oldLactationNumber')}}</td>
+        <td>{{lodash.get(event,'newborns')}}</td>
+        <td>{{lodash.get(event,'cowEntryStatus')}}</td>
+        <td>{{lodash.get(event,'birthDateCalculated')}}</td>
+        <td>{{lodash.get(event,'sire')}}</td>
+        <td>{{lodash.get(event,'breedingNumber')}}</td>
+        <td>{{lodash.get(event,'isOutOfBreedingWindow')}}</td>
+        <td>{{lodash.get(event,'interval')}}</td>
+        <td>
+          <button pButton pRipple icon="pi pi-pencil" class="p-button-rounded p-button-success p-mr-2" (click)="editEvent(event)"></button>
+          <button pButton pRipple icon="pi pi-trash" class="p-button-rounded p-button-warning" (click)="deleteEvent(event)"></button>
+        </td>
+      </tr>
+    </ng-template>
+    <ng-template pTemplate="summary">
+      <div class="p-d-flex p-ai-center p-jc-between">
+        In total there are {{events ? events.length : 0 }} events.
+      </div>
+    </ng-template>
+  </p-table>
+</div>
+
+<p-dialog [(visible)]="eventDialog" [style]="{width: '450px'}" header="Event Details" [modal]="true" styleClass="p-fluid">
+  <ng-template pTemplate="content" [formGroup]="form">
+    <div class="p-field">
+      <h5>healthIndex</h5>
+      <input type="text" pInputText formControlName="healthIndex" readonly autofocus />
+    </div>
+    <div class="p-field">
+      <h5>endDate</h5>
+      <input type="text" pInputText formControlName="endDate"  />
+    </div>
+    <div class="p-field">
+      <h5>minValueDateTime</h5>
+      <input type="text" pInputText formControlName="minValueDateTime"  />
+    </div>
+    <div class="p-field">
+      <h5>type</h5>
+      <input type="text" pInputText formControlName="type"  />
+    </div>
+    <div class="p-field">
+      <h5>cowId</h5>
+      <input type="text" pInputText readonly formControlName="cowId"  />
+    </div>
+    <div class="p-field">
+      <h5>animalId</h5>
+      <input type="text" pInputText readonly formControlName="animalId"  />
+    </div>
+    <div class="p-field">
+      <h5>eventId</h5>
+      <input type="text" pInputText readonly formControlName="eventId"  />
+    </div>
+    <div class="p-field">
+      <h5>deletable</h5>
+      <input type="text" pInputText formControlName="deletable"  />
+    </div>
+    <div class="p-field">
+      <h5>lactationNumber</h5>
+      <input type="text" pInputText formControlName="lactationNumber"  />
+    </div>
+    <div class="p-field">
+      <h5>daysInLactation</h5>
+      <input type="text" pInputText formControlName="daysInLactation"  />
+    </div>
+    <div class="p-field">
+      <h5>ageInDays</h5>
+      <input type="text" pInputText formControlName="ageInDays"  />
+    </div>
+    <div class="p-field">
+      <h5>startDateTime</h5>
+      <input type="text" pInputText formControlName="startDateTime"  />
+    </div>
+    <div class="p-field">
+      <h5>reportingDateTime</h5>
+      <input type="text" pInputText formControlName="reportingDateTime"  />
+    </div>
+    <div class="p-field">
+      <h5>alertType</h5>
+      <input type="text" pInputText formControlName="alertType"  />
+    </div>
+    <div class="p-field">
+      <h5>duration</h5>
+      <input type="text" pInputText formControlName="duration"  />
+    </div>
+    <div class="p-field">
+      <h5>originalStartDateTime</h5>
+      <input type="text" pInputText formControlName="originalStartDateTime"  />
+    </div>
+    <div class="p-field">
+      <h5>endDateTime</h5>
+      <input type="text" pInputText formControlName="endDateTime"  />
+    </div>
+    <div class="p-field">
+      <h5>daysInPregnancy</h5>
+      <input type="text" pInputText formControlName="daysInPregnancy"  />
+    </div>
+    <div class="p-field">
+      <h5>newGroupId</h5>
+      <input type="text" pInputText readonly formControlName="newGroupId"  />
+    </div>
+    <div class="p-field">
+      <h5>newGroupName</h5>
+      <input type="text" pInputText formControlName="newGroupName"  />
+    </div>
+    <div class="p-field">
+      <h5>currentGroupId</h5>
+      <input type="text" pInputText readonly formControlName="currentGroupId"  />
+    </div>
+    <div class="p-field">
+      <h5>currentGroupName</h5>
+      <input type="text" pInputText formControlName="currentGroupName"  />
+    </div>
+    <div class="p-field">
+      <h5>destinationGroup</h5>
+      <input type="text" pInputText formControlName="destinationGroup"  />
+    </div>
+    <div class="p-field">
+      <h5>destinationGroupName</h5>
+      <input type="text" pInputText formControlName="destinationGroupName"  />
+    </div>
+    <div class="p-field">
+      <h5>calvingEase</h5>
+      <input type="text" pInputText formControlName="calvingEase"  />
+    </div>
+    <div class="p-field">
+      <h5>oldLactationNumber</h5>
+      <input type="text" pInputText formControlName="oldLactationNumber"  />
+    </div>
+    <div class="p-field">
+      <h5>newborns</h5>
+      <input type="text" pInputText formControlName="newborns"  />
+    </div>
+    <div class="p-field">
+      <h5>cowEntryStatus</h5>
+      <input type="text" pInputText formControlName="cowEntryStatus"  />
+    </div>
+    <div class="p-field">
+      <h5>birthDateCalculated</h5>
+      <input type="text" pInputText formControlName="birthDateCalculated"  />
+    </div>
+    <div class="p-field">
+      <h5>sire</h5>
+      <input type="text" pInputText formControlName="sire"  />
+    </div>
+<div class="p-field">
+      <h5>breedingNumber</h5>
+      <input type="text" pInputText formControlName="breedingNumber"  />
+    </div>
+<div class="p-field">
+      <h5>isOutOfBreedingWindow</h5>
+      <input type="text" pInputText formControlName="isOutOfBreedingWindow"  />
+    </div>
+<div class="p-field">
+      <h5>interval</h5>
+      <input type="text" pInputText formControlName="interval"  />
+    </div>
+
+  </ng-template>
+
+  <ng-template pTemplate="footer">
+    <button pButton pRipple label="Cancel" icon="pi pi-times" class="p-button-text" (click)="hideDialog()"></button>
+    <button pButton pRipple label="Save" icon="pi pi-check" class="p-button-text" (click)="saveEvent()"></button>
+  </ng-template>
+</p-dialog>
+
+<p-confirmDialog [style]="{width: '450px'}"></p-confirmDialog>
